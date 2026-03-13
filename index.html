@@ -460,27 +460,16 @@
 </footer>
 
 <script>
-  // Simple form handler — replace with your actual endpoint
-  // For now, stores submissions in localStorage and shows success message
-  document.getElementById('signupForm').addEventListener('submit', function(e) {
+document.getElementById('signupForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const email = this.querySelector('input[name="email"]').value;
-    
-    // Store locally (replace with Supabase, Formspree, or Mailchimp endpoint)
-    const signups = JSON.parse(localStorage.getItem('nocturne_signups') || '[]');
-    signups.push({ email, date: new Date().toISOString() });
-    localStorage.setItem('nocturne_signups', JSON.stringify(signups));
-    
-    // Show success
+    var email = this.querySelector('input[name="email"]').value;
+    fetch('https://formspree.io/f/xgonzyed', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email})
+    });
     this.style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
-    
-    // TODO: Replace with actual API call:
-    // fetch('https://YOUR_SUPABASE_URL/functions/v1/signup', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email })
-    // });
   });
 
   // Intersection Observer for fade-in animations
