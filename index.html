@@ -9,6 +9,8 @@
 <meta property="og:description" content="WiFi-powered crowd counting for bars. See how busy your venue is right now.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://usenocturne.ai">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -288,10 +290,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <div>
-      <span class="nav-logo">NOCTURNE</span>
-      <span class="nav-dot"></span>
-    </div>
+    <div style="display:flex;align-items:center;gap:8px"><img src="/favicon.svg" alt="N" width="24" height="24" style="border-radius:5px"><span class="nav-logo">NOCTURNE</span><span class="nav-dot"></span></div>
     <a href="#signup" class="nav-cta">Get Early Access</a>
   </div>
 </nav>
@@ -366,6 +365,8 @@
   <!-- FEATURES -->
   <section id="features">
     <div class="section-label" style="color:var(--orange)">What You Get on Day One</div>
+      <div style="margin-bottom:40px;border-radius:14px;overflow:hidden;border:1px solid var(--border)"><img src="/dashboard-preview.png" alt="NOCTURNE Dashboard Preview" style="width:100%;display:block"></div>
+    <div style="text-align:center;margin-bottom:40px"><a href="/demo" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);color:var(--accent);font-weight:700;font-size:14px;text-decoration:none;transition:transform 0.2s">Try the live dashboard demo →</a></div>
     <h2 class="section-title">Built for bar owners, not data scientists.</h2>
     <p class="section-desc">Everything is designed to be useful at a glance — on your phone, while you're working the floor.</p>
 
@@ -437,7 +438,7 @@
   <section class="cta-section" id="signup">
     <h2>Join the Fullerton Pilot</h2>
     <p>We're looking for 5 bars on the Commonwealth strip to launch with. Free hardware, free dashboard, no contract. All we need is a power outlet and 5 minutes.</p>
-<p style="margin-bottom:24px"><a href="/demo" style="color:var(--accent);font-weight:600;font-size:14px">See the live dashboard preview →</a></p>
+<p>Built by a CSUF alum in Southern California · <a href="mailto:justin@usenocturne.ai">justin@usenocturne.ai</a></p>
     <form class="signup-form" id="signupForm">
       <input type="email" name="email" placeholder="your@email.com" required>
       <button type="submit">I'm Interested</button>
