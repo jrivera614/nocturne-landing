@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NOCTURNE - Your Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#060609;--card:#0c0c18;--border:rgba(255,255,255,0.06);--accent:#6C63FF;--green:#30D158;--cyan:#64D2FF;--orange:#FF9F0A;--red:#FF2D55;--white:#FFF;--dim:#888;--muted:#444;--font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace}
+body{background:var(--bg);color:var(--white);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;padding-bottom:40px}
+.ambient{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 15%,rgba(108,99,255,0.06),transparent 50%)}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px;position:relative;z-index:1}
+.header{padding:16px 0 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;background:rgba(6,6,9,0.85);backdrop-filter:blur(16px);margin:0 -16px;padding-left:16px;padding-right:16px}
+.logo{font-size:14px;font-weight:700;color:var(--dim)}
+.live-badge{display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:14px;background:rgba(48,209,88,0.12);font-size:10px;font-weight:800;color:var(--green);letter-spacing:0.8px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.venue-header{padding:16px 0 8px}
+.venue-name{font-size:24px;font-weight:900;letter-spacing:-0.5px}
+.venue-meta{font-size:11px;color:var(--dim);margin-top:2px}
+.big-card{padding:20px;border-radius:14px;margin:12px 0;text-align:center}
+.big-num{font-size:56px;font-weight:900;font-family:var(--mono);line-height:1}
+.big-cap{font-size:16px;color:var(--dim);font-family:var(--mono);margin-top:4px}
+.big-delta{font-size:13px;margin-top:6px}
+.status-pill{display:inline-block;padding:4px 12px;border-radius:8px;font-size:11px;font-weight:800;letter-spacing:0.5px;margin-top:8px}
+.section{margin:20px 0}
+.section-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.card{padding:16px;border-radius:12px;background:var(--card);border:1px solid var(--border);margin-bottom:10px}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stat-box{padding:14px;border-radius:10px;background:var(--card);border:1px solid var(--border);text-align:center}
+.stat-box-val{font-size:22px;font-weight:800;font-family:var(--mono)}
+.stat-box-lbl{font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-top:4px}
+.alert-card{padding:12px 16px;border-radius:10px;margin:10px 0}
+.bar-row{margin-bottom:8px}
+.bar-label{display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px}
+.bar-track{height:6px;border-radius:3px;background:rgba(255,255,255,0.04)}
+.bar-fill{height:100%;border-radius:3px}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,0.04);border-radius:8px;padding:2px;margin:12px 0}
+.tab{flex:1;padding:8px;border-radius:6px;border:none;background:transparent;color:var(--dim);font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all 0.2s}
+.tab.active{background:rgba(255,255,255,0.08);color:var(--white)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.weekly-day{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.weekly-day:last-child{border-bottom:none}
+.weekly-day-name{width:36px;font-size:11px;font-weight:700;color:var(--dim)}
+.weekly-bar{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,0.04)}
+.weekly-bar-fill{height:100%;border-radius:4px;transition:width 0.5s}
+.weekly-day-val{width:40px;text-align:right;font-size:12px;font-weight:700;font-family:var(--mono)}
+.area-indicator{display:flex;align-items:center;gap:10px;padding:14px;border-radius:10px;background:var(--card);border:1px solid var(--border)}
+.area-dot{width:12px;height:12px;border-radius:50%}
+.area-text{font-size:13px;font-weight:600}
+.area-sub{font-size:10px;color:var(--dim)}
+.footer{text-align:center;padding:24px 0 8px;font-size:9px;color:#333}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="wrap">
+
+  <div class="header">
+    <span class="logo">NOCTURNE</span>
+    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+  </div>
+
+  <div class="venue-header">
+    <div class="venue-name" id="venueName">Back Alley</div>
+    <div class="venue-meta" id="venueMeta">Live Music · 110 E Walnut Ave · Cap: 143</div>
+  </div>
+
+  <!-- BIG OCCUPANCY -->
+  <div class="big-card" id="bigCard">
+    <div class="big-num" id="bigNum">0</div>
+    <div class="big-cap" id="bigCap">/ 143</div>
+    <div class="big-delta" id="bigDelta"></div>
+    <div class="status-pill" id="statusPill">LOADING</div>
+  </div>
+
+  <!-- CAPACITY ALERT -->
+  <div id="alertArea"></div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('tonight')">Tonight</button>
+    <button class="tab" onclick="showTab('weekly')">This Week</button>
+    <button class="tab" onclick="showTab('area')">Area Pulse</button>
+  </div>
+
+  <!-- TONIGHT TAB -->
+  <div class="tab-content active" id="tab-tonight">
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-box-val" id="occPct">0%</div>
+        <div class="stat-box-lbl">Occupancy</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-val" id="peakTime">--</div>
+        <div class="stat-box-lbl">Est. Peak</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-box-val" id="confPct">0%</div>
+        <div class="stat-box-lbl">Confidence</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-val" id="avgDwell">--</div>
+        <div class="stat-box-lbl">Avg Stay</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-lbl">Tonight's Trend</div>
+      <div class="card" id="trendChart" style="height:80px;display:flex;align-items:flex-end;gap:2px;padding:12px 8px"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-lbl">Signal Sources</div>
+      <div class="card" id="signalSources"></div>
+    </div>
+  </div>
+
+  <!-- WEEKLY TAB -->
+  <div class="tab-content" id="tab-weekly">
+    <div class="section">
+      <div class="section-lbl">Weekly Rollup</div>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-box-val" style="color:var(--orange)" id="weekPeak">Fri</div>
+          <div class="stat-box-lbl">Busiest Night</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" style="color:var(--accent)" id="weekAvg">0</div>
+          <div class="stat-box-lbl">Avg Nightly Peak</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-box-val" style="color:var(--cyan)" id="weekPeakHour">11 PM</div>
+          <div class="stat-box-lbl">Peak Hour (Avg)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="weekTrend">--</div>
+          <div class="stat-box-lbl">vs Last Week</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-lbl">Nightly Peaks This Week</div>
+      <div class="card" id="weeklyBars"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-lbl">Insights</div>
+      <div class="card" style="font-size:12px;color:var(--dim);line-height:1.6" id="weeklyInsights"></div>
+    </div>
+  </div>
+
+  <!-- AREA PULSE TAB -->
+  <div class="tab-content" id="tab-area">
+    <div class="section">
+      <div class="section-lbl">Downtown Fullerton</div>
+      <div id="areaStatus"></div>
+      <div class="card" style="margin-top:12px">
+        <div class="section-lbl">Area Activity (General)</div>
+        <div id="areaBars" style="margin-top:8px"></div>
+        <div style="font-size:9px;color:var(--muted);margin-top:12px;font-style:italic">Individual venue counts are never shown. This reflects overall area activity only.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">NOCTURNE · Your venue dashboard · usenocturne.ai</div>
+</div>
+
+<script>
+var VENUE = {name:"Back Alley",type:"Live Music",address:"110 E Walnut Ave",capacity:143};
+var count=0,occ=0,delta=0,trend=[],confidence=0;
+
+// Simulated weekly data
+var weekData = {
+  days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+  peaks:[42,38,55,78,127,134,89],
+  peakHours:["10:30 PM","10:00 PM","11:00 PM","11:30 PM","11:45 PM","12:00 AM","10:30 PM"]
+};
+
+function occColor(o){return o>0.85?"#FF2D55":o>0.65?"#FF9F0A":o>0.4?"#30D158":"#64D2FF"}
+function occLabel(o){return o>0.85?"PACKED":o>0.65?"BUSY":o>0.4?"LIVELY":"CHILL"}
+
+function simulate(){
+  var h=new Date().getHours();
+  var base=h>=22||h<2?0.78:h>=20?0.6:h>=18?0.4:0.15;
+  occ=Math.min(0.98,Math.max(0.05,base+(Math.random()-0.5)*0.3));
+  count=Math.round(occ*VENUE.capacity);
+  delta=Math.round((Math.random()-0.4)*15);
+  confidence=65+Math.floor(Math.random()*25);
+
+  // Build trend (last 12 intervals)
+  trend=[];
+  for(var i=0;i<18;i++){
+    var t=Math.max(0,Math.min(1,base-0.35+i*0.04+(Math.random()-0.5)*0.1));
+    trend.push(t);
+  }
+}
+
+function render(){
+  var c=occColor(occ);
+  document.getElementById("bigNum").textContent=count;
+  document.getElementById("bigNum").style.color=c;
+  document.getElementById("bigCap").textContent="/ "+VENUE.capacity;
+  document.getElementById("bigDelta").innerHTML='<span style="color:'+(delta>0?"var(--green)":"var(--red)")+'">'+(delta>0?"+":"")+delta+'</span> in last 15 min';
+  document.getElementById("bigCard").style.background="linear-gradient(135deg,"+c+"08,"+c+"03)";
+  document.getElementById("bigCard").style.border="1px solid "+c+"18";
+  var pill=document.getElementById("statusPill");
+  pill.textContent=occLabel(occ);
+  pill.style.background=c+"18";
+  pill.style.color=c;
+
+  document.getElementById("occPct").textContent=Math.round(occ*100)+"%";
+  document.getElementById("occPct").style.color=c;
+  document.getElementById("peakTime").textContent=(10+Math.floor(Math.random()*2))+":"+(Math.random()>0.5?"30":"00")+" PM";
+  document.getElementById("confPct").textContent=confidence+"%";
+  document.getElementById("confPct").style.color=confidence>70?"var(--green)":"var(--orange)";
+  document.getElementById("avgDwell").textContent=(45+Math.floor(Math.random()*40))+" min";
+
+  // Alert
+  var alertArea=document.getElementById("alertArea");
+  if(occ>0.8){
+    alertArea.innerHTML='<div class="alert-card" style="background:rgba(255,45,85,0.08);border:1px solid rgba(255,45,85,0.15);color:var(--red);font-weight:700;font-size:13px">Approaching capacity ('+Math.round(occ*100)+'%). Consider one-in-one-out.</div>';
+  }else if(occ>0.65){
+    alertArea.innerHTML='<div class="alert-card" style="background:rgba(255,159,10,0.08);border:1px solid rgba(255,159,10,0.15);color:var(--orange);font-weight:600;font-size:12px">Filling up. Currently at '+Math.round(occ*100)+'% capacity.</div>';
+  }else{alertArea.innerHTML="";}
+
+  // Trend bars
+  var trendHtml="";
+  trend.forEach(function(v){
+    var h=Math.max(4,v*56);
+    var tc=occColor(v);
+    trendHtml+='<div style="flex:1;background:'+tc+'30;border-radius:3px 3px 0 0;height:'+h+'px;min-width:4px"></div>';
+  });
+  document.getElementById("trendChart").innerHTML=trendHtml+'<div style="position:absolute;bottom:4px;left:8px;font-size:7px;color:var(--muted)">6 PM</div><div style="position:absolute;bottom:4px;right:8px;font-size:7px;color:var(--muted)">Now</div>';
+  document.getElementById("trendChart").style.position="relative";
+
+  // Signals
+  var wifi=20+Math.floor(Math.random()*15);
+  var gps=5+Math.floor(Math.random()*8);
+  var total=wifi+gps;
+  document.getElementById("signalSources").innerHTML=
+    '<div class="bar-row"><div class="bar-label"><span style="color:#A855F7;font-weight:700">WiFi</span><span style="color:var(--dim);font-family:var(--mono);font-size:9px">'+wifi+' signals · '+Math.round(wifi/total*100)+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+wifi/total*100+'%;background:#A855F7"></div></div></div>'+
+    '<div class="bar-row"><div class="bar-label"><span style="color:#30D158;font-weight:700">GPS</span><span style="color:var(--dim);font-family:var(--mono);font-size:9px">'+gps+' signals · '+Math.round(gps/total*100)+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+gps/total*100+'%;background:#30D158"></div></div></div>';
+
+  // Weekly
+  var maxPeak=Math.max.apply(null,weekData.peaks);
+  var busiestIdx=weekData.peaks.indexOf(maxPeak);
+  var avgPeak=Math.round(weekData.peaks.reduce(function(a,b){return a+b},0)/weekData.peaks.length);
+  document.getElementById("weekPeak").textContent=weekData.days[busiestIdx];
+  document.getElementById("weekAvg").textContent=avgPeak;
+  var lastWeekAvg=avgPeak-5+Math.floor(Math.random()*15);
+  var weekChange=Math.round((avgPeak-lastWeekAvg)/lastWeekAvg*100);
+  document.getElementById("weekTrend").textContent=(weekChange>0?"+":"")+weekChange+"%";
+  document.getElementById("weekTrend").style.color=weekChange>0?"var(--green)":"var(--red)";
+
+  var wHtml="";
+  weekData.days.forEach(function(day,i){
+    var pct=weekData.peaks[i]/VENUE.capacity;
+    var wc=occColor(pct);
+    wHtml+='<div class="weekly-day"><span class="weekly-day-name">'+day+'</span><div class="weekly-bar"><div class="weekly-bar-fill" style="width:'+pct*100+'%;background:'+wc+'"></div></div><span class="weekly-day-val" style="color:'+wc+'">'+weekData.peaks[i]+'</span></div>';
+  });
+  document.getElementById("weeklyBars").innerHTML=wHtml;
+
+  document.getElementById("weeklyInsights").innerHTML=
+    "Your busiest night was <strong style='color:var(--white)'>"+weekData.days[busiestIdx]+"</strong> with a peak of <strong style='color:var(--white)'>"+maxPeak+"</strong> people at <strong style='color:var(--white)'>"+weekData.peakHours[busiestIdx]+"</strong>. "+
+    "Average nightly peak this week was <strong style='color:var(--white)'>"+avgPeak+"</strong> ("+(weekChange>0?weekChange+"% up":"Math.abs("+weekChange+")% down")+" from last week). "+
+    "Consider adding a bartender on "+weekData.days[busiestIdx]+" nights and reducing staff on "+weekData.days[weekData.peaks.indexOf(Math.min.apply(null,weekData.peaks))]+" nights.";
+
+  // Area pulse
+  var areaOcc=0.3+Math.random()*0.4;
+  var areaC=occColor(areaOcc);
+  var areaLabel=areaOcc>0.65?"Downtown is busy tonight":"Downtown is moderate tonight";
+  if(areaOcc<0.35) areaLabel="Downtown is quiet tonight";
+  document.getElementById("areaStatus").innerHTML=
+    '<div class="area-indicator"><div class="area-dot" style="background:'+areaC+';box-shadow:0 0 8px '+areaC+'"></div><div><div class="area-text" style="color:'+areaC+'">'+areaLabel+'</div><div class="area-sub">Based on activity across downtown Fullerton venues</div></div></div>';
+
+  var timeSlots=["6 PM","7 PM","8 PM","9 PM","10 PM","11 PM","12 AM"];
+  var areaHtml="";
+  timeSlots.forEach(function(slot,i){
+    var av=Math.max(0.05,Math.min(0.95,0.1+i*0.12+(Math.random()-0.5)*0.15));
+    var ac=occColor(av);
+    areaHtml+='<div class="bar-row"><div class="bar-label"><span style="color:var(--dim);font-weight:600;font-size:10px">'+slot+'</span><span style="color:'+ac+';font-size:10px;font-weight:700">'+occLabel(av)+'</span></div><div class="bar-track"><div class="bar-fill" style="width:'+av*100+'%;background:'+ac+'"></div></div></div>';
+  });
+  document.getElementById("areaBars").innerHTML=areaHtml;
+}
+
+function showTab(id){
+  document.querySelectorAll(".tab-content").forEach(function(el){el.classList.remove("active")});
+  document.querySelectorAll(".tab").forEach(function(el){el.classList.remove("active")});
+  document.getElementById("tab-"+id).classList.add("active");
+  document.querySelectorAll(".tab").forEach(function(el,i){
+    if(["tonight","weekly","area"][i]===id) el.classList.add("active");
+  });
+}
+
+function update(){simulate();render();}
+update();
+setInterval(update,3000);
+
+// Venue selector (hidden, for pitch flexibility)
+var venues=[
+  {name:"Back Alley",type:"Live Music",address:"110 E Walnut Ave",capacity:143},
+  {name:"Hopscotch",type:"Whiskey Bar",address:"110 E Commonwealth Ave",capacity:208},
+  {name:"Roscoe's",type:"Bar & Restaurant",address:"116 W Commonwealth Ave",capacity:328},
+  {name:"Madero",type:"Latin Fusion / Club",address:"111 N Harbor Blvd",capacity:250},
+  {name:"High Horse Saloon",type:"Country Bar",address:"122 E Commonwealth Ave",capacity:301},
+  {name:"Mickey's Irish Pub",type:"Irish Pub",address:"122 E Commonwealth Ave",capacity:200},
+  {name:"Cantina Urbana Kalaveras",type:"Latin / Dancing",address:"122 E Commonwealth Ave",capacity:224},
+  {name:"Chako's Social",type:"Lounge",address:"E Commonwealth Ave",capacity:299},
+  {name:"The Charleston",type:"Upscale Lounge",address:"110 E Commonwealth Ave",capacity:234},
+  {name:"Heroes",type:"Bar & Restaurant",address:"E Commonwealth Ave",capacity:336},
+  {name:"Ziing",type:"Nightclub",address:"215 N Pomona Ave",capacity:500},
+];
+// Tap venue name 5 times to cycle through venues (hidden feature for pitching)
+var tapCount=0;
+document.getElementById("venueName").addEventListener("click",function(){
+  tapCount++;
+  if(tapCount>=3){
+    tapCount=0;
+    var currentIdx=venues.findIndex(function(v){return v.name===VENUE.name});
+    var nextIdx=(currentIdx+1)%venues.length;
+    VENUE=venues[nextIdx];
+    document.getElementById("venueName").textContent=VENUE.name;
+    document.getElementById("venueMeta").textContent=VENUE.type+" · "+VENUE.address+" · Cap: "+VENUE.capacity;
+    document.getElementById("bigCap").textContent="/ "+VENUE.capacity;
+    // Regenerate weekly data for new venue
+    weekData.peaks=weekData.days.map(function(){return Math.round(VENUE.capacity*(0.2+Math.random()*0.6))});
+    update();
+  }
+});
+</script>
+</body>
+</html>
