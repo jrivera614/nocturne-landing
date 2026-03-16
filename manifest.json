@@ -1,0 +1,10 @@
+{
+  "name": "NOCTURNE",
+  "short_name": "NOCTURNE",
+  "description": "What's busy tonight?",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#060609",
+  "theme_color": "#060609",
+  "icons": [your logo files]
+}
