@@ -51,290 +51,177 @@ body{background:var(--bg);color:var(--white);font-family:var(--font);-webkit-fon
 .area-dot{width:12px;height:12px;border-radius:50%}
 .area-text{font-size:13px;font-weight:600}
 .area-sub{font-size:10px;color:var(--dim)}
+.updated-tag{font-size:9px;color:var(--muted);text-align:center;margin-top:4px}
 .footer{text-align:center;padding:24px 0 8px;font-size:9px;color:#333}
 </style>
 </head>
 <body>
 <div class="ambient"></div>
 <div class="wrap">
-
   <div class="header">
     <span class="logo">NOCTURNE</span>
     <div class="live-badge"><span class="live-dot"></span>LIVE</div>
   </div>
-
   <div class="venue-header">
-    <div class="venue-name" id="venueName">Back Alley</div>
-    <div class="venue-meta" id="venueMeta">Live Music · 110 E Walnut Ave · Cap: 143</div>
+    <div class="venue-name" id="venueName">Loading...</div>
+    <div class="venue-meta" id="venueMeta"></div>
   </div>
-
-  <!-- BIG OCCUPANCY -->
   <div class="big-card" id="bigCard">
-    <div class="big-num" id="bigNum">0</div>
-    <div class="big-cap" id="bigCap">/ 143</div>
+    <div class="big-num" id="bigNum">--</div>
+    <div class="big-cap" id="bigCap"></div>
     <div class="big-delta" id="bigDelta"></div>
-    <div class="status-pill" id="statusPill">LOADING</div>
+    <div class="status-pill" id="statusPill">CONNECTING</div>
   </div>
-
-  <!-- CAPACITY ALERT -->
   <div id="alertArea"></div>
-
-  <!-- TABS -->
+  <div class="updated-tag" id="updatedTag"></div>
   <div class="tabs">
     <button class="tab active" onclick="showTab('tonight')">Tonight</button>
     <button class="tab" onclick="showTab('weekly')">This Week</button>
     <button class="tab" onclick="showTab('area')">Area Pulse</button>
   </div>
-
-  <!-- TONIGHT TAB -->
   <div class="tab-content active" id="tab-tonight">
     <div class="stat-row">
-      <div class="stat-box">
-        <div class="stat-box-val" id="occPct">0%</div>
-        <div class="stat-box-lbl">Occupancy</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-box-val" id="peakTime">--</div>
-        <div class="stat-box-lbl">Est. Peak</div>
-      </div>
+      <div class="stat-box"><div class="stat-box-val" id="occPct">--</div><div class="stat-box-lbl">Occupancy</div></div>
+      <div class="stat-box"><div class="stat-box-val" id="peakCount">--</div><div class="stat-box-lbl">Tonight's Peak</div></div>
     </div>
     <div class="stat-row">
-      <div class="stat-box">
-        <div class="stat-box-val" id="confPct">0%</div>
-        <div class="stat-box-lbl">Confidence</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-box-val" id="avgDwell">--</div>
-        <div class="stat-box-lbl">Avg Stay</div>
-      </div>
+      <div class="stat-box"><div class="stat-box-val" id="peakTime">--</div><div class="stat-box-lbl">Peak Time</div></div>
+      <div class="stat-box"><div class="stat-box-val" id="signalCount">--</div><div class="stat-box-lbl">Signals Today</div></div>
     </div>
-
     <div class="section">
       <div class="section-lbl">Tonight's Trend</div>
-      <div class="card" id="trendChart" style="height:80px;display:flex;align-items:flex-end;gap:2px;padding:12px 8px"></div>
-    </div>
-
-    <div class="section">
-      <div class="section-lbl">Signal Sources</div>
-      <div class="card" id="signalSources"></div>
+      <div class="card" id="trendChart" style="height:80px;display:flex;align-items:flex-end;gap:2px;padding:12px 8px;position:relative"></div>
     </div>
   </div>
-
-  <!-- WEEKLY TAB -->
   <div class="tab-content" id="tab-weekly">
     <div class="section">
       <div class="section-lbl">Weekly Rollup</div>
       <div class="stat-row">
-        <div class="stat-box">
-          <div class="stat-box-val" style="color:var(--orange)" id="weekPeak">Fri</div>
-          <div class="stat-box-lbl">Busiest Night</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-val" style="color:var(--accent)" id="weekAvg">0</div>
-          <div class="stat-box-lbl">Avg Nightly Peak</div>
-        </div>
-      </div>
-      <div class="stat-row">
-        <div class="stat-box">
-          <div class="stat-box-val" style="color:var(--cyan)" id="weekPeakHour">11 PM</div>
-          <div class="stat-box-lbl">Peak Hour (Avg)</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-val" id="weekTrend">--</div>
-          <div class="stat-box-lbl">vs Last Week</div>
-        </div>
+        <div class="stat-box"><div class="stat-box-val" style="color:var(--orange)" id="weekPeak">--</div><div class="stat-box-lbl">Busiest Day</div></div>
+        <div class="stat-box"><div class="stat-box-val" style="color:var(--accent)" id="weekAvg">--</div><div class="stat-box-lbl">Avg Peak</div></div>
       </div>
     </div>
-
     <div class="section">
-      <div class="section-lbl">Nightly Peaks This Week</div>
-      <div class="card" id="weeklyBars"></div>
+      <div class="section-lbl">Daily Peaks</div>
+      <div class="card" id="weeklyBars" style="color:var(--muted);font-size:11px">Collecting data...</div>
     </div>
-
     <div class="section">
       <div class="section-lbl">Insights</div>
-      <div class="card" style="font-size:12px;color:var(--dim);line-height:1.6" id="weeklyInsights"></div>
+      <div class="card" style="font-size:12px;color:var(--dim);line-height:1.6" id="weeklyInsights">Insights appear after a few days of data.</div>
     </div>
   </div>
-
-  <!-- AREA PULSE TAB -->
   <div class="tab-content" id="tab-area">
     <div class="section">
       <div class="section-lbl">Downtown Fullerton</div>
       <div id="areaStatus"></div>
-      <div class="card" style="margin-top:12px">
-        <div class="section-lbl">Area Activity (General)</div>
-        <div id="areaBars" style="margin-top:8px"></div>
-        <div style="font-size:9px;color:var(--muted);margin-top:12px;font-style:italic">Individual venue counts are never shown. This reflects overall area activity only.</div>
-      </div>
     </div>
   </div>
-
   <div class="footer">NOCTURNE · Your venue dashboard · usenocturne.ai</div>
 </div>
-
 <script>
-var VENUE = {name:"Back Alley",type:"Live Music",address:"110 E Walnut Ave",capacity:143};
-var count=0,occ=0,delta=0,trend=[],confidence=0;
+var SB="https://tkiofblsufaalxrwrgxt.supabase.co",SK="sb_publishable_-QvEqE7ObUYWzKVjKN6H8g_BQupZ3C5";
+var VENUE=null,venueId=null,capacity=0,prevCount=null;
+function oC(o){return o>0.85?"#FF2D55":o>0.65?"#FF9F0A":o>0.4?"#30D158":"#64D2FF"}
+function q(p){return fetch(SB+"/rest/v1/"+p,{headers:{apikey:SK,Authorization:"Bearer "+SK}}).then(function(r){return r.json()})}
 
-// Simulated weekly data
-var weekData = {
-  days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-  peaks:[42,38,55,78,127,134,89],
-  peakHours:["10:30 PM","10:00 PM","11:00 PM","11:30 PM","11:45 PM","12:00 AM","10:30 PM"]
-};
-
-function occColor(o){return o>0.85?"#FF2D55":o>0.65?"#FF9F0A":o>0.4?"#30D158":"#64D2FF"}
-function occLabel(o){return o>0.85?"PACKED":o>0.65?"BUSY":o>0.4?"LIVELY":"CHILL"}
-
-function simulate(){
-  var h=new Date().getHours();
-  var base=h>=22||h<2?0.78:h>=20?0.6:h>=18?0.4:0.15;
-  occ=Math.min(0.98,Math.max(0.05,base+(Math.random()-0.5)*0.3));
-  count=Math.round(occ*VENUE.capacity);
-  delta=Math.round((Math.random()-0.4)*15);
-  confidence=65+Math.floor(Math.random()*25);
-
-  // Build trend (last 12 intervals)
-  trend=[];
-  for(var i=0;i<18;i++){
-    var t=Math.max(0,Math.min(1,base-0.35+i*0.04+(Math.random()-0.5)*0.1));
-    trend.push(t);
-  }
+async function init(){
+  var p=new URLSearchParams(location.search),name=p.get("venue")||"Back Alley";
+  var v=await q("venues?name=eq."+encodeURIComponent(name)+"&select=*");
+  if(!v||!v.length) v=await q("venues?limit=1&select=*");
+  if(!v||!v.length){document.getElementById("venueName").textContent="No venue found";return}
+  VENUE=v[0];venueId=VENUE.id;capacity=VENUE.capacity;
+  document.getElementById("venueName").textContent=VENUE.name;
+  document.getElementById("venueMeta").textContent=VENUE.type+" · "+VENUE.address+" · Cap: "+capacity;
+  document.getElementById("bigCap").textContent="/ "+capacity;
+  fetchLive();fetchTrend();fetchWeekly();fetchArea();
+  setInterval(fetchLive,15000);setInterval(fetchTrend,60000);
 }
 
-function render(){
-  var c=occColor(occ);
-  document.getElementById("bigNum").textContent=count;
-  document.getElementById("bigNum").style.color=c;
-  document.getElementById("bigCap").textContent="/ "+VENUE.capacity;
-  document.getElementById("bigDelta").innerHTML='<span style="color:'+(delta>0?"var(--green)":"var(--red)")+'">'+(delta>0?"+":"")+delta+'</span> in last 15 min';
-  document.getElementById("bigCard").style.background="linear-gradient(135deg,"+c+"08,"+c+"03)";
-  document.getElementById("bigCard").style.border="1px solid "+c+"18";
-  var pill=document.getElementById("statusPill");
-  pill.textContent=occLabel(occ);
-  pill.style.background=c+"18";
-  pill.style.color=c;
+async function fetchLive(){
+  try{
+    var d=await q("venue_live_state?venue_id=eq."+venueId+"&select=*");
+    if(!d||!d.length)return;var l=d[0],count=l.count,occ=l.occupancy,status=l.status,c=oC(occ);
+    var delta=prevCount!==null?count-prevCount:0;prevCount=count;
+    document.getElementById("bigNum").textContent=count;
+    document.getElementById("bigNum").style.color=c;
+    document.getElementById("bigCard").style.background="linear-gradient(135deg,"+c+"08,"+c+"03)";
+    document.getElementById("bigCard").style.border="1px solid "+c+"18";
+    var pill=document.getElementById("statusPill");pill.textContent=status;pill.style.background=c+"18";pill.style.color=c;
+    document.getElementById("bigDelta").innerHTML='<span style="color:'+(delta>=0?"var(--green)":"var(--red)")+'">'+(delta>=0?"+":"")+delta+'</span> since last update';
+    document.getElementById("occPct").textContent=Math.round(occ*100)+"%";document.getElementById("occPct").style.color=c;
+    var a=document.getElementById("alertArea");
+    if(occ>0.85)a.innerHTML='<div class="alert-card" style="background:rgba(255,45,85,0.08);border:1px solid rgba(255,45,85,0.15);color:var(--red);font-weight:700;font-size:13px">Near capacity ('+Math.round(occ*100)+'%). One-in-one-out recommended.</div>';
+    else if(occ>0.65)a.innerHTML='<div class="alert-card" style="background:rgba(255,159,10,0.08);border:1px solid rgba(255,159,10,0.15);color:var(--orange);font-weight:600;font-size:12px">Filling up. Currently at '+Math.round(occ*100)+'% capacity.</div>';
+    else if(occ<0.15)a.innerHTML='<div class="alert-card" style="background:rgba(100,210,255,0.08);border:1px solid rgba(100,210,255,0.15);color:var(--cyan);font-weight:600;font-size:12px">Slow right now. Consider reducing staff.</div>';
+    else a.innerHTML="";
+    var u=new Date(l.updated_at),now=new Date(),ago=Math.round((now-u)/1000);
+    document.getElementById("updatedTag").textContent="Last updated: "+(ago<60?ago+"s ago":Math.round(ago/60)+"m ago");
+  }catch(e){console.error(e)}
+}
 
-  document.getElementById("occPct").textContent=Math.round(occ*100)+"%";
-  document.getElementById("occPct").style.color=c;
-  document.getElementById("peakTime").textContent=(10+Math.floor(Math.random()*2))+":"+(Math.random()>0.5?"30":"00")+" PM";
-  document.getElementById("confPct").textContent=confidence+"%";
-  document.getElementById("confPct").style.color=confidence>70?"var(--green)":"var(--orange)";
-  document.getElementById("avgDwell").textContent=(45+Math.floor(Math.random()*40))+" min";
+async function fetchTrend(){
+  try{
+    var now=new Date(),ts=new Date(now.getFullYear(),now.getMonth(),now.getDate(),0,0,0).toISOString();
+    var s=await q("signals?venue_id=eq."+venueId+"&created_at=gte."+ts+"&order=created_at.asc&select=device_count,created_at");
+    document.getElementById("signalCount").textContent=s.length;
+    if(!s.length){document.getElementById("trendChart").innerHTML='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px">Waiting for data...</div>';return}
+    var peak=0,peakTime="";
+    s.forEach(function(x){if(x.device_count>peak){peak=x.device_count;var t=new Date(x.created_at);peakTime=t.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:true,timeZone:"America/Los_Angeles"})}});
+    document.getElementById("peakCount").textContent=peak;document.getElementById("peakCount").style.color=oC(peak/capacity);
+    document.getElementById("peakTime").textContent=peakTime;
+    var bk={};s.forEach(function(x){var t=new Date(x.created_at),k=t.getUTCHours()+":"+Math.floor(t.getUTCMinutes()/30)*30;if(!bk[k]||x.device_count>bk[k])bk[k]=x.device_count});
+    var vals=Object.values(bk),mx=Math.max.apply(null,vals)||1,html="";
+    vals.forEach(function(v){var h=Math.max(4,(v/mx)*56),tc=oC(v/capacity);html+='<div style="flex:1;background:'+tc+'40;border-radius:3px 3px 0 0;height:'+h+'px;min-width:4px" title="'+v+'"></div>'});
+    document.getElementById("trendChart").innerHTML=html+'<div style="position:absolute;bottom:2px;left:8px;font-size:7px;color:var(--muted)">Start</div><div style="position:absolute;bottom:2px;right:8px;font-size:7px;color:var(--muted)">Now</div>';
+  }catch(e){console.error(e)}
+}
 
-  // Alert
-  var alertArea=document.getElementById("alertArea");
-  if(occ>0.8){
-    alertArea.innerHTML='<div class="alert-card" style="background:rgba(255,45,85,0.08);border:1px solid rgba(255,45,85,0.15);color:var(--red);font-weight:700;font-size:13px">Approaching capacity ('+Math.round(occ*100)+'%). Consider one-in-one-out.</div>';
-  }else if(occ>0.65){
-    alertArea.innerHTML='<div class="alert-card" style="background:rgba(255,159,10,0.08);border:1px solid rgba(255,159,10,0.15);color:var(--orange);font-weight:600;font-size:12px">Filling up. Currently at '+Math.round(occ*100)+'% capacity.</div>';
-  }else{alertArea.innerHTML="";}
+async function fetchWeekly(){
+  try{
+    var wa=new Date(Date.now()-7*864e5).toISOString();
+    var s=await q("signals?venue_id=eq."+venueId+"&created_at=gte."+wa+"&order=created_at.asc&select=device_count,created_at");
+    if(!s.length){document.getElementById("weeklyBars").innerHTML='<div style="color:var(--muted);font-size:11px">No data yet. Check back after a few days.</div>';return}
+    var dn=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],dp={};
+    s.forEach(function(x){var d=dn[new Date(x.created_at).getDay()];if(!dp[d]||x.device_count>dp[d])dp[d]=x.device_count});
+    var mx=Math.max.apply(null,Object.values(dp))||1,bd="",bc=0;
+    Object.keys(dp).forEach(function(d){if(dp[d]>bc){bc=dp[d];bd=d}});
+    var ap=Object.values(dp),avg=Math.round(ap.reduce(function(a,b){return a+b},0)/ap.length);
+    document.getElementById("weekPeak").textContent=bd;document.getElementById("weekAvg").textContent=avg;
+    var h="",od=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+    od.forEach(function(d){var p=dp[d]||0,pc=p/capacity,wc=oC(pc);h+='<div class="weekly-day"><span class="weekly-day-name">'+d+'</span><div class="weekly-bar"><div class="weekly-bar-fill" style="width:'+(p/mx*100)+'%;background:'+wc+'"></div></div><span class="weekly-day-val" style="color:'+wc+'">'+p+'</span></div>'});
+    document.getElementById("weeklyBars").innerHTML=h;
+    document.getElementById("weeklyInsights").innerHTML="Busiest: <strong style='color:var(--white)'>"+bd+"</strong> (peak "+bc+"). Average peak: <strong style='color:var(--white)'>"+avg+"</strong>. "+(ap.length>=5?"Patterns emerging in your data.":"Keep the sensor running for more trend data.");
+  }catch(e){console.error(e)}
+}
 
-  // Trend bars
-  var trendHtml="";
-  trend.forEach(function(v){
-    var h=Math.max(4,v*56);
-    var tc=occColor(v);
-    trendHtml+='<div style="flex:1;background:'+tc+'30;border-radius:3px 3px 0 0;height:'+h+'px;min-width:4px"></div>';
-  });
-  document.getElementById("trendChart").innerHTML=trendHtml+'<div style="position:absolute;bottom:4px;left:8px;font-size:7px;color:var(--muted)">6 PM</div><div style="position:absolute;bottom:4px;right:8px;font-size:7px;color:var(--muted)">Now</div>';
-  document.getElementById("trendChart").style.position="relative";
-
-  // Signals
-  var wifi=20+Math.floor(Math.random()*15);
-  var gps=5+Math.floor(Math.random()*8);
-  var total=wifi+gps;
-  document.getElementById("signalSources").innerHTML=
-    '<div class="bar-row"><div class="bar-label"><span style="color:#A855F7;font-weight:700">WiFi</span><span style="color:var(--dim);font-family:var(--mono);font-size:9px">'+wifi+' signals · '+Math.round(wifi/total*100)+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+wifi/total*100+'%;background:#A855F7"></div></div></div>'+
-    '<div class="bar-row"><div class="bar-label"><span style="color:#30D158;font-weight:700">GPS</span><span style="color:var(--dim);font-family:var(--mono);font-size:9px">'+gps+' signals · '+Math.round(gps/total*100)+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+gps/total*100+'%;background:#30D158"></div></div></div>';
-
-  // Weekly
-  var maxPeak=Math.max.apply(null,weekData.peaks);
-  var busiestIdx=weekData.peaks.indexOf(maxPeak);
-  var avgPeak=Math.round(weekData.peaks.reduce(function(a,b){return a+b},0)/weekData.peaks.length);
-  document.getElementById("weekPeak").textContent=weekData.days[busiestIdx];
-  document.getElementById("weekAvg").textContent=avgPeak;
-  var lastWeekAvg=avgPeak-5+Math.floor(Math.random()*15);
-  var weekChange=Math.round((avgPeak-lastWeekAvg)/lastWeekAvg*100);
-  document.getElementById("weekTrend").textContent=(weekChange>0?"+":"")+weekChange+"%";
-  document.getElementById("weekTrend").style.color=weekChange>0?"var(--green)":"var(--red)";
-
-  var wHtml="";
-  weekData.days.forEach(function(day,i){
-    var pct=weekData.peaks[i]/VENUE.capacity;
-    var wc=occColor(pct);
-    wHtml+='<div class="weekly-day"><span class="weekly-day-name">'+day+'</span><div class="weekly-bar"><div class="weekly-bar-fill" style="width:'+pct*100+'%;background:'+wc+'"></div></div><span class="weekly-day-val" style="color:'+wc+'">'+weekData.peaks[i]+'</span></div>';
-  });
-  document.getElementById("weeklyBars").innerHTML=wHtml;
-
-  document.getElementById("weeklyInsights").innerHTML=
-    "Your busiest night was <strong style='color:var(--white)'>"+weekData.days[busiestIdx]+"</strong> with a peak of <strong style='color:var(--white)'>"+maxPeak+"</strong> people at <strong style='color:var(--white)'>"+weekData.peakHours[busiestIdx]+"</strong>. "+
-    "Average nightly peak this week was <strong style='color:var(--white)'>"+avgPeak+"</strong> ("+(weekChange>0?weekChange+"% up":"Math.abs("+weekChange+")% down")+" from last week). "+
-    "Consider adding a bartender on "+weekData.days[busiestIdx]+" nights and reducing staff on "+weekData.days[weekData.peaks.indexOf(Math.min.apply(null,weekData.peaks))]+" nights.";
-
-  // Area pulse
-  var areaOcc=0.3+Math.random()*0.4;
-  var areaC=occColor(areaOcc);
-  var areaLabel=areaOcc>0.65?"Downtown is busy tonight":"Downtown is moderate tonight";
-  if(areaOcc<0.35) areaLabel="Downtown is quiet tonight";
-  document.getElementById("areaStatus").innerHTML=
-    '<div class="area-indicator"><div class="area-dot" style="background:'+areaC+';box-shadow:0 0 8px '+areaC+'"></div><div><div class="area-text" style="color:'+areaC+'">'+areaLabel+'</div><div class="area-sub">Based on activity across downtown Fullerton venues</div></div></div>';
-
-  var timeSlots=["6 PM","7 PM","8 PM","9 PM","10 PM","11 PM","12 AM"];
-  var areaHtml="";
-  timeSlots.forEach(function(slot,i){
-    var av=Math.max(0.05,Math.min(0.95,0.1+i*0.12+(Math.random()-0.5)*0.15));
-    var ac=occColor(av);
-    areaHtml+='<div class="bar-row"><div class="bar-label"><span style="color:var(--dim);font-weight:600;font-size:10px">'+slot+'</span><span style="color:'+ac+';font-size:10px;font-weight:700">'+occLabel(av)+'</span></div><div class="bar-track"><div class="bar-fill" style="width:'+av*100+'%;background:'+ac+'"></div></div></div>';
-  });
-  document.getElementById("areaBars").innerHTML=areaHtml;
+async function fetchArea(){
+  try{
+    var d=await q("venue_live_state?select=count,occupancy");if(!d||!d.length)return;
+    var tc=d.reduce(function(a,v){return a+v.count},0),ao=d.reduce(function(a,v){return a+v.occupancy},0)/d.length,c=oC(ao);
+    var lb=ao>0.65?"Downtown is busy tonight":ao>0.35?"Downtown is moderate tonight":"Downtown is quiet tonight";
+    document.getElementById("areaStatus").innerHTML='<div class="area-indicator"><div class="area-dot" style="background:'+c+';box-shadow:0 0 8px '+c+'"></div><div><div class="area-text" style="color:'+c+'">'+lb+'</div><div class="area-sub">'+tc+' people across '+d.length+' tracked venues</div></div></div>';
+  }catch(e){console.error(e)}
 }
 
 function showTab(id){
   document.querySelectorAll(".tab-content").forEach(function(el){el.classList.remove("active")});
   document.querySelectorAll(".tab").forEach(function(el){el.classList.remove("active")});
   document.getElementById("tab-"+id).classList.add("active");
-  document.querySelectorAll(".tab").forEach(function(el,i){
-    if(["tonight","weekly","area"][i]===id) el.classList.add("active");
-  });
+  document.querySelectorAll(".tab").forEach(function(el,i){if(["tonight","weekly","area"][i]===id)el.classList.add("active")});
+  if(id==="weekly")fetchWeekly();if(id==="area")fetchArea();
 }
 
-function update(){simulate();render();}
-update();
-setInterval(update,3000);
-
-// Venue selector (hidden, for pitch flexibility)
-var venues=[
-  {name:"Back Alley",type:"Live Music",address:"110 E Walnut Ave",capacity:143},
-  {name:"Hopscotch",type:"Whiskey Bar",address:"110 E Commonwealth Ave",capacity:208},
-  {name:"Roscoe's",type:"Bar & Restaurant",address:"116 W Commonwealth Ave",capacity:328},
-  {name:"Madero",type:"Latin Fusion / Club",address:"111 N Harbor Blvd",capacity:250},
-  {name:"High Horse Saloon",type:"Country Bar",address:"122 E Commonwealth Ave",capacity:301},
-  {name:"Mickey's Irish Pub",type:"Irish Pub",address:"122 E Commonwealth Ave",capacity:200},
-  {name:"Cantina Urbana Kalaveras",type:"Latin / Dancing",address:"122 E Commonwealth Ave",capacity:224},
-  {name:"Chako's Social",type:"Lounge",address:"E Commonwealth Ave",capacity:299},
-  {name:"The Charleston",type:"Upscale Lounge",address:"110 E Commonwealth Ave",capacity:234},
-  {name:"Heroes",type:"Bar & Restaurant",address:"E Commonwealth Ave",capacity:336},
-  {name:"Ziing",type:"Nightclub",address:"215 N Pomona Ave",capacity:500},
-];
-// Tap venue name 5 times to cycle through venues (hidden feature for pitching)
 var tapCount=0;
 document.getElementById("venueName").addEventListener("click",function(){
-  tapCount++;
-  if(tapCount>=3){
-    tapCount=0;
-    var currentIdx=venues.findIndex(function(v){return v.name===VENUE.name});
-    var nextIdx=(currentIdx+1)%venues.length;
-    VENUE=venues[nextIdx];
-    document.getElementById("venueName").textContent=VENUE.name;
-    document.getElementById("venueMeta").textContent=VENUE.type+" · "+VENUE.address+" · Cap: "+VENUE.capacity;
-    document.getElementById("bigCap").textContent="/ "+VENUE.capacity;
-    // Regenerate weekly data for new venue
-    weekData.peaks=weekData.days.map(function(){return Math.round(VENUE.capacity*(0.2+Math.random()*0.6))});
-    update();
+  tapCount++;if(tapCount>=3){tapCount=0;
+    q("venues?select=name&order=capacity.asc").then(function(v){
+      var ci=v.findIndex(function(x){return x.name===VENUE.name}),ni=(ci+1)%v.length;
+      location.search="?venue="+encodeURIComponent(v[ni].name);
+    });
   }
 });
+
+init();
 </script>
 </body>
 </html>
